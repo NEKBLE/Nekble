@@ -3,15 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>NEKBLE AI Dual Service App (Final Polished)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-    <style>
-        :root {
-            --font-size-base: clamp(14px, 1.2vw + 0.25rem, 16px);
-            --font-size-title: clamp(3rem, 8vw, 4.5rem);
-            --spacing-unit: clamp(1rem, 2vw, 1.5rem);
-            --icon-size: clamp(4rem, 10vw, 5rem);
+    
             
             /* Light Theme */
             --bg-color: transparent;
