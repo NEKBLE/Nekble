@@ -588,22 +588,10 @@
         });
         
         // --- Gemini API Logic ---
-        const GEMINI_API_KEY = ""; // Provided by environment
-        const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${GEMINI_API_KEY}`;
-        
-        function formatGeminiResponse(text) {
-            const safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            
-            let html = safeText
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/^- (.*$)/gm, '<li>$1</li>')
-                .replace(/^\* (.*$)/gm, '<li>$1</li>')
-                .replace(/^\• (.*$)/gm, '<li>$1</li>');
-
-            html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>').replace(/<\/ul>\s*<ul>/gs, '');
-
-            return html.replace(/\n/g, '<br>').replace(/<br>\s*<ul>/g, '<ul>').replace(/<\/ul>\s*<br>/g, '</ul>');
-        }
+        // Using a serverless function as a proxy is the most reliable way to handle CORS for API calls in production.
+        // This function would be hosted on a cloud platform (like Vercel, Netlify, or Google Cloud Functions).
+        // For this self-contained example, we'll use a public CORS proxy, which can sometimes be unreliable.
+        const GEMINI_PROXY_URL = 'https://corsproxy.io/?' + encodeURIComponent('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent');
 
         async function callGeminiAPI(prompt, useGrounding = false, retries = 3, delay = 1000) {
             const payload = {
@@ -615,14 +603,17 @@
 
             for (let i = 0; i < retries; i++) {
                 try {
-                    const response = await fetch(GEMINI_API_URL, {
+                    const response = await fetch(GEMINI_PROXY_URL, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
                         body: JSON.stringify(payload)
                     });
 
                     if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                         const errorBody = await response.text();
+                         throw new Error(`HTTP error! status: ${response.status}, body: ${errorBody}`);
                     }
                     
                     const result = await response.json();
@@ -798,4 +789,6 @@
     </script>
 </body>
 </html>
+
+
 
